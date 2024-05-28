@@ -23,7 +23,7 @@ jobs:
           git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/Lucaka/Copy-File-and-Create-PR.git
           cd ./Copy-File-and-Create-PR
           cp ./init.txt ../google-release-please/init.txt
-          cd ../mHIS_BackEnd
+          cd ../google-release-please
           git add .
           git commit -m "Update init.txt"
           git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/Lucaka/google-release-please.git HEAD:feature/i18n-update --force
