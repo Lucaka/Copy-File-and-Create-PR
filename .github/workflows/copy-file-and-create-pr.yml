@@ -1,0 +1,39 @@
+name: Copy File and Create PR
+
+on:
+  push:
+    branches:
+      - feature/i18n-update-backend
+
+jobs:
+  copy_file_and_create_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+
+      - name: Copy file to B repository
+        run: |
+          git config --global user.email "Lucaka@advmeds.com"
+          git config --global user.name "https://github.com/lucaka"
+          git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/Lucaka/google-release-please.git
+          cd ./google-release-please
+          cd ..
+          git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/Lucaka/Copy-File-and-Create-PR.git
+          cd ./Copy-File-and-Create-PR
+          cp ./init.txt ../google-release-please/init.txt
+          cd ../mHIS_BackEnd
+          git add .
+          git commit -m "Update init.txt"
+          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/Lucaka/google-release-please.git HEAD:feature/i18n-update --force
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          repository: feature/i18n-update
+          title: 'Automated PR to copy file from A repository'
+          body: 'This PR was automatically created to copy a file from A repository to B repository.'
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
