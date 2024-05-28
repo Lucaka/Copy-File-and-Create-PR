@@ -32,7 +32,7 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          repository: feature/i18n-update
+          repository: Lucaka/google-release-please
           title: 'Automated PR to copy file from A repository'
           body: 'This PR was automatically created to copy a file from A repository to B repository.'
           committer: GitHub <noreply@github.com>
