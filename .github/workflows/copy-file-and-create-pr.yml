@@ -3,7 +3,7 @@ name: Copy File and Create PR
 on:
   push:
     branches:
-      - feature/i18n-update-backend
+      - main
 
 jobs:
   copy_file_and_create_pr:
