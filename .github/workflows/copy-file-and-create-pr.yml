@@ -26,14 +26,20 @@ jobs:
           cd ../google-release-please
           git add .
           git commit -m "Update init.txt"
-          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/Lucaka/google-release-please.git HEAD:feature/i18n-update --force
+          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/Lucaka/google-release-please.git HEAD:copy-file-branch --force
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          repository: Lucaka/google-release-please
-          title: 'Automated PR to copy file from A repository'
-          body: 'This PR was automatically created to copy a file from A repository to B repository.'
-          committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+      - name: Create Pull Request in B repository
+        env:
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
+          pr_data=$(jq -n --arg title "Automated PR to copy zh_tw.json from A repository" \
+                            --arg head "copy-file-branch" \
+                            --arg base "main" \
+                            --arg body "This PR was automatically created to copy zh_tw.json from A repository to B repository." \
+                            '{title: $title, head: $head, base: $base, body: $body}')
+          # 创建 PR
+          curl -X POST \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/Lucaka/google-release-please/pulls \
+            -d "$pr_data"
